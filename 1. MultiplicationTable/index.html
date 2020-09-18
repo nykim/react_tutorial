@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            // const e = React.createElement;
+
+            class MultiplicationTable extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        first: Math.ceil(Math.random() * 9),
+                        second: Math.ceil(Math.random() * 9),
+                        value: '',
+                        result: '',
+                        resultHistory: [],
+                    };
+                };
+
+                onSubmit = (e) => {
+                    e.preventDefault();
+                    if (parseInt(this.state.value) === this.state.first * this.state.second ) {
+                        var joined = [].concat([`${this.state.first} x ${this.state.second} = ${this.state.value} : Correct`], this.state.resultHistory);
+                        this.setState((prevState) => {
+                            return {
+                                result: 'Correct!',
+                                first: Math.ceil(Math.random() * 9),
+                                second: Math.ceil(Math.random() * 9),
+                                value: '',
+                                resultHistory: [].concat([`${prevState.first} x ${prevState.second} = ${prevState.value} : Correct`], prevState.resultHistory),
+                            }
+
+                        });
+                    } else {
+                        var joined = 
+                        this.setState((prevState) => {
+                            return {
+                                result: 'Wrong!',
+                                value: '',
+                                resultHistory: [].concat([`${prevState.first} x ${prevState.second} = ${prevState.value} : Wrong`], prevState.resultHistory),
+                            }
+                        });
+                    }       
+                    this.input.focus();             
+                };
+
+                onChange = (e) => {
+                    this.setState({value: e.target.value});
+                }
+
+                input;
+                render() {
+                    return (
+                        <div>
+                            <div>{this.state.first} x {this.state.second} = ?</div>
+                            <form onSubmit={this.onSubmit}>
+                                <input ref={(c) => { this.input = c; }} type="number" value={this.state.value} onChange={this.onChange}/>
+                                <button>Enter</button>
+                            </form>
+                            <div>{this.state.result}</div>
+                            <div>
+                                <h2><u>History</u></h2>
+                                    {this.state.resultHistory.map(n => (
+                                        <li>{n}</li>
+                                    ))}
+                            </div>
+                        </div>
+                    );
+                }
+            }
+        </script>
+        <script type="text/babel">
+            ReactDOM.render(<MultiplicationTable />, document.querySelector('#root'));
+        </script>
+    </body>
+</html>
